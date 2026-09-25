@@ -1,0 +1,83 @@
+[
+  {
+    "id": "dropColumn.user.address",
+    "label": "Drop column \"address\" from \"user\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "address",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"address\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "address"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"address\"",
+        "sql": "ALTER TABLE \"public\".\"user\" DROP COLUMN \"address\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"address\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "address"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.price",
+    "label": "Create table \"price\"",
+    "summary": "Creates table \"price\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "price"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"price\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"price\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"price\"",
+        "sql": "CREATE TABLE \"public\".\"price\" (\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"price\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"price\""
+        ]
+      }
+    ]
+  }
+]

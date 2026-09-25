@@ -1,0 +1,22 @@
+// use prisma-8
+
+// user model
+enum Role {
+  User
+  Admin
+  Super_Admin
+}
+
+
+model User {
+  id        Uuid     @id @default(uuid())
+  name      String
+  email     String @unique
+  imageUrl  String
+  role      Role     @default(User)
+  createdAt TimestamptzString @default(now())
+  updatedAt TimestamptzString @default(now())
+}
+
+
+

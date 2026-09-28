@@ -1,0 +1,128 @@
+[
+  {
+    "id": "column.public.user.accountStatus",
+    "label": "Add column \"accountStatus\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "accountStatus",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"accountStatus\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "accountStatus"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"accountStatus\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"accountStatus\" text DEFAULT 'Pending' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"accountStatus\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "accountStatus"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.verified",
+    "label": "Add column \"verified\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "verified",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"verified\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "verified"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"verified\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"verified\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"verified\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "verified"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.user.user_accountStatus_check_7a70b409",
+    "label": "Add check constraint \"user_accountStatus_check_7a70b409\" on \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "user_accountStatus_check_7a70b409",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_accountStatus_check_7a70b409\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_accountStatus_check_7a70b409",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"user_accountStatus_check_7a70b409\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_accountStatus_check_7a70b409\" CHECK (\"accountStatus\" IN ('Pending', 'Active', 'Blocked', 'Suspended', 'Deleted'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_accountStatus_check_7a70b409\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_accountStatus_check_7a70b409",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  }
+]

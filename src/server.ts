@@ -1,8 +1,9 @@
 import app from "./app";
 import db from "../prisma/db";
-import config from "./config";
-import { createClient } from "redis";
-import redisClient from "./config/redis";
+
+
+import redisClient from "./app/lib/redis";
+
 
 const PORT = Number(process.env.PORT);
 
@@ -15,7 +16,7 @@ const main = async () => {
 
     // redis connect
     await redisClient.connect();
-    console.log("redis connected")
+    console.log("Redis connected")
 
     app.listen(PORT, "127.0.0.1", () => {
       console.log(`Your Server is running on Port : ${PORT}`);

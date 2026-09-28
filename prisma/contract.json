@@ -13,6 +13,31 @@
     "namespaces": {
       "public": {
         "enum": {
+          "AccountStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Pending",
+                "value": "Pending"
+              },
+              {
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "name": "Blocked",
+                "value": "Blocked"
+              },
+              {
+                "name": "Suspended",
+                "value": "Suspended"
+              },
+              {
+                "name": "Deleted",
+                "value": "Deleted"
+              }
+            ]
+          },
           "Role": {
             "codecId": "pg/text@1",
             "members": [
@@ -34,6 +59,19 @@
         "models": {
           "User": {
             "fields": {
+              "accountStatus": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "AccountStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -95,11 +133,21 @@
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
+              },
+              "verified": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {},
             "storage": {
               "fields": {
+                "accountStatus": {
+                  "column": "accountStatus"
+                },
                 "createdAt": {
                   "column": "createdAt"
                 },
@@ -123,6 +171,9 @@
                 },
                 "updatedAt": {
                   "column": "updatedAt"
+                },
+                "verified": {
+                  "column": "verified"
                 }
               },
               "namespaceId": "public",
@@ -141,12 +192,32 @@
             "user": {
               "checks": [
                 {
+                  "expression": "\"accountStatus\" IN ('Pending', 'Active', 'Blocked', 'Suspended', 'Deleted')",
+                  "name": "user_accountStatus_check_7a70b409",
+                  "prefix": "user_accountStatus_check"
+                },
+                {
                   "expression": "\"role\" IN ('User', 'Admin', 'Super_Admin')",
                   "name": "user_role_check_5a42eb1c",
                   "prefix": "user_role_check"
                 }
               ],
               "columns": {
+                "accountStatus": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "Pending"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "AccountStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -208,6 +279,15 @@
                   },
                   "nativeType": "timestamptz",
                   "nullable": false
+                },
+                "verified": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -227,6 +307,16 @@
             }
           },
           "valueSet": {
+            "AccountStatus": {
+              "kind": "valueSet",
+              "values": [
+                "Pending",
+                "Active",
+                "Blocked",
+                "Suspended",
+                "Deleted"
+              ]
+            },
             "Role": {
               "kind": "valueSet",
               "values": [
@@ -241,7 +331,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "3c0fc9338f0dad3efb174e052d01cc95fbb82f5409e93bf43d053cc051c1aba7"
+    "storageHash": "b998490b003e4356554e1d65ef446364481ca66968bf61e149964fda7e8485e7"
   },
   "execution": {
     "executionHash": "c6c68895811eac8510a3105769605e248431b77d0f5294ccf29b9aa8ce355232",

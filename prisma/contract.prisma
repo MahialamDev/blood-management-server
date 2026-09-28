@@ -7,17 +7,23 @@ enum Role {
   Super_Admin
 }
 
-
-model User {
-  id        Uuid     @id @default(uuid())
-  name      String
-  email     String @unique
-  password  String @default("password")
-  imageUrl  String
-  role      Role     @default(User)
-  createdAt TimestamptzString @default(now())
-  updatedAt TimestamptzString @default(now())
+enum AccountStatus {
+  Pending
+  Active
+  Blocked
+  Suspended
+  Deleted
 }
 
-
-
+model User {
+  id            Uuid              @id @default(uuid())
+  name          String
+  email         String            @unique
+  password      String            @default("password")
+  imageUrl      String
+  role          Role              @default(User)
+  accountStatus AccountStatus     @default(Pending)
+  verified      Boolean           @default(false)
+  createdAt     TimestamptzString @default(now())
+  updatedAt     TimestamptzString @default(now())
+}

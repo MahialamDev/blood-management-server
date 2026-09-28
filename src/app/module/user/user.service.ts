@@ -1,4 +1,5 @@
-import db from "../../../prisma/db";
+import db from "../../../../prisma/db";
+
 
 const getAllUsers = async (page: number, limit: number, search?:string) => {
   const offset = (page - 1) * limit;

@@ -69,6 +69,13 @@
                   "kind": "scalar"
                 }
               },
+              "password": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "role": {
                 "nullable": false,
                 "type": {
@@ -107,6 +114,9 @@
                 },
                 "name": {
                   "column": "name"
+                },
+                "password": {
+                  "column": "password"
                 },
                 "role": {
                   "column": "role"
@@ -166,6 +176,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "password": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "password"
+                  },
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "role": {
                   "codecId": "pg/text@1",
                   "default": {
@@ -222,7 +241,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0273bfd2a45a41e361915ad48bbd243849ccab937abe2d9d049ded56d2d33f04"
+    "storageHash": "3c0fc9338f0dad3efb174e052d01cc95fbb82f5409e93bf43d053cc051c1aba7"
   },
   "execution": {
     "executionHash": "c6c68895811eac8510a3105769605e248431b77d0f5294ccf29b9aa8ce355232",

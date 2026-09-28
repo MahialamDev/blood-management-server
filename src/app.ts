@@ -2,10 +2,11 @@ import cookieParser from "cookie-parser"
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import httpStatus from "http-status";
-import { AuthRoute } from "./module/auth/auth.route";
-import { globalErrorHandler } from "./utils/globalErrorHandler";
-import { UserRoute } from "./module/user/user.route";
-import { rateLimiter } from "./utils/rateLimiter";
+import { rateLimiter } from "./app/utils/rateLimiter";
+import { AuthRoute } from "./app/module/auth/auth.route";
+import { UserRoute } from "./app/module/user/user.route";
+import { globalErrorHandler } from "./app/utils/globalErrorHandler";
+
 
 const app:Application = express();
 

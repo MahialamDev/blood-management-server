@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { UserService } from "../user/user.service";
+import { email } from "zod";
 
 // register
 const registerUser = catchAsync(async (req: Request, res: Response) => {
@@ -42,11 +43,35 @@ const verifyUser = catchAsync(async (req: Request, res: Response,) => {
 
 // login
 const loginUser = async (req: Request, res: Response) => {
+  // payload
+  const { email, password } = req.body;
+  const callbackUrl = req.query.callbackUrl || "/";
   // here login condition
+  const loginRes = await AuthService.loginUser(email, password)
+
+  res.cookie("accessToken", loginRes.accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 15
+  } )
+  res.cookie("refreshToken", loginRes.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 7
+  })
 
   res.status(200).json({
     success: true,
-  });
+    statusCode: 200,
+    message: "User Created Successfully!",
+    data: null,
+    meta: {
+      callbackUrl
+    }
+  })
+  
 };
 
 export const AuthController = { loginUser, registerUser, verifyUser };

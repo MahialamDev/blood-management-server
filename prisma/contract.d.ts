@@ -304,29 +304,6 @@ export type StorageColumnInputTypes = {
     };
   };
 };
-
-export namespace Models {
-  export type public_User = {
-    id: CodecTypes['pg/uuid@1']['output'];
-    name: CodecTypes['pg/text@1']['output'];
-    email: CodecTypes['pg/text@1']['output'];
-    password: CodecTypes['pg/text@1']['output'];
-    imageUrl: CodecTypes['pg/text@1']['output'];
-    role: 'User' | 'Admin' | 'Super_Admin';
-    accountStatus: 'Pending' | 'Active' | 'Blocked' | 'Suspended' | 'Deleted';
-    verified: CodecTypes['pg/bool@1']['output'];
-    createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    readonly [RelationKeys]?: never;
-  };
-}
-
-export declare const models: {
-  public: {
-    User: Models.public_User;
-  };
-};
-
 export type TypeMaps = TypeMapsType<
   CodecTypes,
   QueryOperationTypes,

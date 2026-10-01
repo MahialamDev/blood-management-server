@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: blood_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: blood123
+      POSTGRES_DB: blood_management_system
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+volumes:
+  postgres_data:
+    
+        

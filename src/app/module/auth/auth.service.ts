@@ -15,6 +15,7 @@ import redisClient from "../../lib/redis";
 
 type User = z.infer<typeof registerUserSchema>;
 
+//register user
 const registerUser = async (payload: User) => {
   const validateInfo = registerUserSchema.parse(payload);
 
@@ -43,21 +44,15 @@ const registerUser = async (payload: User) => {
     password: hashedPassword,
   };
 
-    // add redis and send email
-    const expirationSecond = 5 * 60; //5 min
-    const otpKey = `user-registation-otp:${email}`
-    const otpValue = crypto.randomInt(100000, 1000000);
+  // add redis and send email
+  const expirationSecond = 5 * 60; //5 min
+  const otpKey = `user-registation-otp:${email}`;
+  const otpValue = crypto.randomInt(100000, 1000000);
 
-
-    // set to redis
-    await redisClient.set(
-        otpKey,
-        otpValue.toString(),
-        {
-            EX: expirationSecond
-        }
-    );
-
+  // set to redis
+  await redisClient.set(otpKey, otpValue.toString(), {
+    EX: expirationSecond,
+  });
 
   // find the path for email body
   const templatePath = path.join(
@@ -88,50 +83,89 @@ const registerUser = async (payload: User) => {
   return { user };
 };
 
-
+// verify user
 const verifyUser = async (email: string, otp: string) => {
-	const otpKey = `user-registation-otp:${email}`;
+  const otpKey = `user-registation-otp:${email}`;
 
-	// 1. Redis থেকে OTP বের করা
-	const storedOtp = await redisClient.get(otpKey);
+  // 1. Redis থেকে OTP বের করা
+  const storedOtp = await redisClient.get(otpKey);
 
-	if (!storedOtp) {
-		throw new AppError(400, "OTP expired or not found");
-	}
+  if (!storedOtp) {
+    throw new AppError(400, "OTP expired or not found");
+  }
 
-	// 2. User-এর OTP এবং Redis-এর OTP মিলানো
-	if (storedOtp !== otp) {
-		throw new AppError(400, "Invalid OTP");
-	}
+  // 2. User-এর OTP এবং Redis-এর OTP মিলানো
+  if (storedOtp !== otp) {
+    throw new AppError(400, "Invalid OTP");
+  }
 
-	// 3. Database-এ user খোঁজা
-	const user = await db.orm.public.User.where({
-		email,
-	}).first();
+  // 3. Database-এ user খোঁজা
+  const user = await db.orm.public.User.where({
+    email,
+  }).first();
 
-	if (!user) {
-		throw new AppError(404, "User not found");
-	}
+  if (!user) {
+    throw new AppError(404, "User not found");
+  }
 
-	// 4. Account status Active করা
-	const updatedUser = await db.orm.public.User
-		.where({
-			email,
-		})
-		.update({
-            accountStatus: "Active",
-            verified: true
-		});
+  // 4. Account status Active করা
+  const updatedUser = await db.orm.public.User.where({
+    email,
+  }).update({
+    accountStatus: "Active",
+    verified: true,
+  });
 
-	// 5. OTP delete করা
-	await redisClient.del(otpKey);
+  // 5. OTP delete করা
+  await redisClient.del(otpKey);
 
-	return {
-		user: updatedUser,
-		message: "User verified successfully",
-	};
+  return {
+    user: updatedUser,
+    message: "User verified successfully",
+  };
+};
+
+// login user
+const loginUser = async (email: string, password: string) => {
+  if (!email || !password) {
+    throw new AppError(400, "Invalid Creditial");
+  }
+
+  const user = await db.orm.public.User.where({ email }).first();
+
+  if (!user) {
+    throw new AppError(400, "User not found!");
+  }
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatched) {
+    throw new AppError(401, "Unauthorized Access!");
+  }
+
+  const jwtPayload = {
+    userId: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  // access token
+  const accessToken = jwtUtils.createToken(jwtPayload, config.jwt_secrect!, {
+    expiresIn: 60 * 15,
+  });
+
+  // refresh token
+  const refreshToken = jwtUtils.createToken(jwtPayload, config.jwt_secrect!, {
+    expiresIn: 60 * 60 * 24 * 7,
+  });
+
+  // return
+  return {
+    accessToken,
+    refreshToken,
+  }
 };
 
 // const accessToken = jwtUtils.createToken(jwtInfo, config.jwt_secrect! , "15m" as SignOptions)
 
-export const AuthService = { registerUser, verifyUser };
+export const AuthService = { registerUser, verifyUser, loginUser };

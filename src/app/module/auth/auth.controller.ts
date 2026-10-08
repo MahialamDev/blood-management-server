@@ -77,22 +77,8 @@ const loginUser = async (req: Request, res: Response) => {
 
 
 // 4. Get Current User Profile (Me)
-const getMe = catchAsync(async (req: Request, res: Response) => {
-  // req অবজেক্টকে কাস্টম টাইপে রূপান্তর করা হলো যাতে user এরর চলে যায়
-  // req.user-কে আপনার কাঙ্ক্ষিত টাইপে কাস্ট করুন
-  const user = req.user as unknown as IRequestUser ;
-
-
-
-  const result = await AuthService.getMe(user);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "User profile fetched successfully",
-    data: result,
-  });
-});
-
+const getMe = () => { 
+  console.log('i am get me')
+}
 
 export const AuthController = { loginUser, registerUser, verifyUser };

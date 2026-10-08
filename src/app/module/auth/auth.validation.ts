@@ -1,3 +1,4 @@
+import { RlsRoleHandle } from "@prisma/orm-postgres/contract-builder";
 import { z } from "zod";
 
 
@@ -7,5 +8,12 @@ export const registerUserSchema = z.object({
     password: z.string().min(6, "Password must be 6 charecter"),
     imageUrl : z.url("Invalid Image Url")
 })
+
+export interface IRequestUser {
+	userId: string;
+	email: string;
+	name: string;
+	role: RlsRoleHandle;
+}
 
 

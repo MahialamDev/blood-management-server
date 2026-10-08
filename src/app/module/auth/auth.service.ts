@@ -166,6 +166,11 @@ const loginUser = async (email: string, password: string) => {
   }
 };
 
+// get me
+const getMe = async (user:User) => { 
+  console.log("i am user")
+}
+
 // const accessToken = jwtUtils.createToken(jwtInfo, config.jwt_secrect! , "15m" as SignOptions)
 
-export const AuthService = { registerUser, verifyUser, loginUser };
+export const AuthService = { registerUser, verifyUser, loginUser, getMe };

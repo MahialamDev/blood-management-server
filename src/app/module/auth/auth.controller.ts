@@ -78,7 +78,8 @@ const loginUser = async (req: Request, res: Response) => {
 
 // 4. Get Current User Profile (Me)
 const getMe = () => { 
-  console.log('i am get me')
+  console.log('i am get me');
+  console.log('i am rahat bro')
 }
 
 export const AuthController = { loginUser, registerUser, verifyUser };

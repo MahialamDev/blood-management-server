@@ -169,6 +169,7 @@ const loginUser = async (email: string, password: string) => {
 // get me
 const getMe = async (user:User) => { 
   console.log("i am user")
+  // this i8s user
 }
 
 // const accessToken = jwtUtils.createToken(jwtInfo, config.jwt_secrect! , "15m" as SignOptions)

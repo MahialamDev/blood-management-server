@@ -78,7 +78,7 @@ const loginUser = async (req: Request, res: Response) => {
 
 // 4. Get Current User Profile (Me)
 const getMe = (req:Request, res: Response) => { 
-  const user = req?.user;
+  const userId = req?.user?.userId;
   const userProfile = await AuthService.getMe(user)
 }
 

@@ -168,7 +168,7 @@ const loginUser = async (email: string, password: string) => {
 
 // get me
 const getMe = async (user:User) => { 
-  console.log("i am user")
+ 
   // this i8s user
 }
 

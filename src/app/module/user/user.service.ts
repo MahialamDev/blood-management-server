@@ -29,4 +29,17 @@ const getAllUsers = async (page: number, limit: number, search?:string) => {
   };
 };
 
-export const UserService = { getAllUsers };
+
+// single user
+const singleUser = () => { 
+  const user = {
+    userId: 1,
+    name: "Rahat",
+    email:"rahat@gmail.com",
+    role: "Admin",
+  }
+
+  return user;
+}
+
+export const UserService = { getAllUsers, singleUser };

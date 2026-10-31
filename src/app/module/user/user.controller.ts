@@ -18,4 +18,14 @@ const allUsers = catchAsync(async (req, res) => {
     })
 })
 
-export const userController = { allUsers };
+const singleUser = catchAsync(async (req, res) => { 
+    const singleUser = await UserService.singleUser();
+    sendResponse(res, {
+        success: true,
+        statusCode: 200, 
+        message: "user found",
+        data: singleUser
+    })
+})
+
+export const userController = { allUsers, singleUser };

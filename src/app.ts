@@ -8,6 +8,7 @@ import { UserRoute } from "./app/module/user/user.route";
 import { globalErrorHandler } from "./app/utils/globalErrorHandler";
 import { printRoutes } from "./app/utils/printRoute";
 import listEndpoints from "express-list-endpoints";
+import { applyFkDefaults } from "@prisma/orm-postgres/family-contract";
 
 
 const app:Application = express();
@@ -46,6 +47,9 @@ const moduleRoutes = [
 
 
 // dev only: sob route table e dekhano
+//this is advance
+
+
 if (process.env.NODE_ENV === "development") {
   console.table(
     moduleRoutes.flatMap((r) =>

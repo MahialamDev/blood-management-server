@@ -14,7 +14,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
   const data = await AuthService.registerUser(payload);
 
-  res.cookie("acccessToken", "Rahat", {
+  res.cookie("accessToken", "Rahat", {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
